@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>San Juan Bautista — Estudio Científico · IVCR+i</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0b;
+    --parchment: #f5f0e8;
+    --gold: #b8922a;
+    --gold-light: #d4a84b;
+    --rust: #8b3a2a;
+    --slate: #2a2e35;
+    --mist: #c8c4bc;
+    --azure: #2d4a6b;
+    --azure-light: #4a7fa8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--ink);
+    color: var(--parchment);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── PAINTING IMAGE ── */
+  .painting-frame {
+    position: relative;
+    display: inline-block;
+  }
+
+  .painting-frame::before {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    border: 1px solid rgba(184,146,42,0.25);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .painting-frame::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 1px solid rgba(184,146,42,0.12);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .painting-frame img {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(10%) contrast(1.05);
+    transition: filter 0.4s ease;
+  }
+
+  .painting-frame:hover img {
+    filter: sepia(0%) contrast(1.08);
+  }
+
+  .painting-caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: rgba(184,146,42,0.5);
+    text-align: center;
+    margin-top: 1rem;
+    text-transform: uppercase;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 30% 60%, #1a1208 0%, var(--ink) 65%);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 70% 50%, rgba(184,146,42,0.06) 0%, transparent 55%),
+      radial-gradient(circle at 20% 80%, rgba(45,74,107,0.1) 0%, transparent 45%);
+  }
+
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(184,146,42,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,146,42,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4rem;
+    align-items: center;
+    padding: 8vw 10vw 4vw;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-text { display: flex; flex-direction: column; }
+
+  .hero-image-wrap {
+    width: clamp(200px, 22vw, 340px);
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.8s;
+    flex-shrink: 0;
+  }
+
+  .institution-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .institution-tag::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.8rem, 7vw, 6.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    color: var(--parchment);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.5s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold-light);
+    font-size: 1.15em;
+  }
+
+  .hero-subtitle {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--mist);
+    max-width: 42ch;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.75s;
+    line-height: 1.6;
+  }
+
+  .hero-meta {
+    margin-top: 3rem;
+    display: flex;
+    gap: 3rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1s;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .hero-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .hero-meta-value {
+    font-size: 0.95rem;
+    color: var(--mist);
+  }
+
+  .hero-scroll {
+    padding: 2rem 10vw 3rem;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.5s;
+  }
+
+  .hero-scroll span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--mist);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 4rem;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity: 0.4;
+    margin: 0;
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 7vw 10vw;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(184,146,42,0.3), transparent);
+    max-width: 8rem;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--parchment);
+    margin-bottom: 2rem;
+  }
+
+  /* ── INTRO SECTION ── */
+  .intro {
+    background: linear-gradient(180deg, var(--ink) 0%, #111109 100%);
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .intro-text p {
+    color: #c8c4b8;
+    margin-bottom: 1.4rem;
+    font-size: 1.05rem;
+  }
+
+  .intro-text p strong {
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .ficha-tecnica {
+    border: 1px solid rgba(184,146,42,0.2);
+    padding: 2.5rem;
+    position: relative;
+    background: rgba(184,146,42,0.03);
+  }
+
+  .ficha-tecnica::before {
+    content: 'FICHA TÉCNICA';
+    position: absolute;
+    top: -0.6em;
+    left: 1.5rem;
+    background: var(--ink);
+    padding: 0 0.8rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+  }
+
+  .ficha-row {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 0.5rem 1.5rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(184,146,42,0.1);
+    font-size: 0.9rem;
+  }
+
+  .ficha-row:last-child { border-bottom: none; }
+
+  .ficha-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding-top: 0.15rem;
+  }
+
+  .ficha-val { color: var(--mist); }
+
+  /* ── HIGHLIGHT BOX ── */
+  .discovery-banner {
+    margin: 5rem 0 0;
+    padding: 3rem 3.5rem;
+    background: linear-gradient(135deg, rgba(139,58,42,0.15), rgba(45,74,107,0.15));
+    border-left: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .discovery-banner::after {
+    content: '✦';
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 5rem;
+    color: rgba(184,146,42,0.08);
+  }
+
+  .discovery-banner p {
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--parchment);
+    line-height: 1.6;
+    max-width: 70ch;
+  }
+
+  .discovery-banner p strong {
+    color: var(--gold-light);
+    font-style: normal;
+  }
+
+  /* ── METHODOLOGY ── */
+  .methodology {
+    background: #0f0f0d;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .tech-card {
+    border: 1px solid rgba(184,146,42,0.15);
+    padding: 2rem;
+    position: relative;
+    transition: border-color 0.3s ease, background 0.3s ease;
+    background: rgba(255,255,255,0.01);
+  }
+
+  .tech-card:hover {
+    border-color: rgba(184,146,42,0.45);
+    background: rgba(184,146,42,0.04);
+  }
+
+  .tech-num {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: rgba(184,146,42,0.5);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+  }
+
+  .tech-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+    margin-bottom: 0.8rem;
+    font-weight: 400;
+  }
+
+  .tech-desc {
+    font-size: 0.88rem;
+    color: #a09c94;
+    line-height: 1.6;
+  }
+
+  .tech-equipment {
+    margin-top: 0.8rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(184,146,42,0.5);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FINDINGS ── */
+  .findings {
+    background: linear-gradient(180deg, #0f0f0d 0%, #0d0d0b 100%);
+  }
+
+  .findings-intro {
+    max-width: 65ch;
+    color: #c0bbb2;
+    font-size: 1.05rem;
+    margin-bottom: 4rem;
+  }
+
+  /* FINDING BLOCKS */
+  .finding-block {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 3rem 5rem;
+    padding: 3.5rem 0;
+    border-top: 1px solid rgba(184,146,42,0.12);
+    align-items: start;
+  }
+
+  .finding-block:last-child {
+    border-bottom: 1px solid rgba(184,146,42,0.12);
+  }
+
+  .finding-num {
+    font-family: 'Cinzel', serif;
+    font-size: 3.5rem;
+    color: rgba(184,146,42,0.12);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .finding-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  .finding-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--parchment);
+    margin-bottom: 1.2rem;
+    line-height: 1.3;
+  }
+
+  .finding-text {
+    color: #b0aba2;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+
+  .finding-text strong { color: var(--gold-light); font-weight: 600; }
+
+  /* ── PALETA ── */
+  .palette-section {
+    background: #111109;
+  }
+
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    border: 1px solid rgba(184,146,42,0.15);
+  }
+
+  .palette-item {
+    padding: 2.5rem 1.5rem 2rem;
+    position: relative;
+    transition: transform 0.3s ease;
+    background: rgba(255,255,255,0.01);
+  }
+
+  .palette-item:hover { transform: translateY(-4px); }
+
+  .palette-swatch {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  .palette-color-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--parchment);
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+
+  .palette-pigments {
+    font-size: 0.82rem;
+    color: var(--mist);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .palette-border {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  /* ── HIDDEN PAINTING ── */
+  .hidden-painting {
+    background: #0a0a08;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hidden-painting::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(45,74,107,0.08), transparent 60%);
+  }
+
+  .hidden-painting-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hidden-painting-visual {
+    position: relative;
+  }
+
+  .layer-diagram {
+    position: relative;
+    aspect-ratio: 3/4;
+    background: rgba(184,146,42,0.03);
+    border: 1px solid rgba(184,146,42,0.15);
+    overflow: hidden;
+  }
+
+  .layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+
+  .layer:hover { filter: brightness(1.3); }
+
+  .layer-top {
+    top: 0; height: 42%;
+    background: linear-gradient(180deg, rgba(139,90,56,0.25), rgba(139,90,56,0.1));
+    color: #c8a87a;
+    border-bottom: 1px dashed rgba(184,146,42,0.3);
+  }
+
+  .layer-mid {
+    top: 42%; height: 12%;
+    background: rgba(184,146,42,0.08);
+    color: var(--gold);
+    border-bottom: 1px dashed rgba(184,146,42,0.3);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+  }
+
+  .layer-hidden {
+    top: 54%; height: 46%;
+    background: linear-gradient(180deg, rgba(45,74,107,0.2), rgba(45,74,107,0.08));
+    color: var(--azure-light);
+  }
+
+  .layer-label {
+    writing-mode: horizontal-tb;
+  }
+
+  .hidden-text-side { }
+
+  .hidden-text-side p {
+    color: #b0aba2;
+    font-size: 0.97rem;
+    line-height: 1.75;
+    margin-bottom: 1.2rem;
+  }
+
+  .hidden-text-side p strong { color: var(--gold-light); }
+
+  .data-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(74,127,168,0.3);
+    padding: 0.3rem 0.9rem;
+    margin: 0.2rem 0.2rem 0.2rem 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--azure-light);
+  }
+
+  /* ── CONCLUSIONS ── */
+  .conclusions {
+    background: linear-gradient(180deg, #0a0a08 0%, var(--ink) 100%);
+  }
+
+  .conclusions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 3rem;
+  }
+
+  .conclusion-card {
+    padding: 2.5rem 3rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(184,146,42,0.1);
+    transition: background 0.3s;
+  }
+
+  .conclusion-card:hover { background: rgba(184,146,42,0.04); }
+
+  .conclusion-icon {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .conclusion-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+    margin-bottom: 0.8rem;
+    font-weight: 400;
+  }
+
+  .conclusion-text {
+    font-size: 0.9rem;
+    color: #9e9990;
+    line-height: 1.7;
+  }
+
+  /* ── GALLERY SECTION ── */
+  .gallery-section {
+    background: #080808;
+    padding: 7vw 10vw;
+  }
+
+  .gallery-tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 3rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(184,146,42,0.2);
+  }
+
+  .gallery-tab {
+    padding: 0.9rem 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6a6660;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+    position: relative;
+    bottom: -1px;
+    transition: color 0.25s, background 0.25s;
+    background: none;
+    user-select: none;
+  }
+
+  .gallery-tab:hover { color: var(--mist); }
+
+  .gallery-tab.active {
+    color: var(--gold-light);
+    border-color: rgba(184,146,42,0.2);
+    background: #080808;
+  }
+
+  .gallery-panel {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .gallery-panel.active { display: block; }
+
+  .gallery-main-img {
+    width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    object-position: center top;
+    background: #050505;
+    border: 1px solid rgba(184,146,42,0.12);
+    border-top: none;
+    display: block;
+  }
+
+  .gallery-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(184,146,42,0.1);
+  }
+
+  .gallery-info-block {}
+
+  .gallery-info-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .gallery-info-text {
+    font-size: 0.9rem;
+    color: #9e9990;
+    line-height: 1.7;
+  }
+
+  .gallery-info-text strong { color: var(--mist); }
+
+  /* Three-image strip */
+  .img-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 4rem;
+    cursor: pointer;
+  }
+
+  .img-strip-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 2/3;
+  }
+
+  .img-strip-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s ease, filter 0.4s ease;
+    filter: brightness(0.75);
+  }
+
+  .img-strip-item:hover img {
+    transform: scale(1.04);
+    filter: brightness(1);
+  }
+
+  .img-strip-item.active-strip img {
+    filter: brightness(1);
+    outline: 2px solid var(--gold);
+  }
+
+  .img-strip-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 2rem 1rem 0.9rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    box-shadow: 0 0 80px rgba(0,0,0,0.8);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--mist);
+    cursor: pointer;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid rgba(184,146,42,0.3);
+    padding: 0.5rem 1rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .lightbox-close:hover { color: var(--gold); border-color: var(--gold); }
+
+  .lightbox-caption {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: rgba(184,146,42,0.6);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 700px) {
+    .img-strip { grid-template-columns: 1fr; }
+    .gallery-info { grid-template-columns: 1fr; }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080808;
+    padding: 4rem 10vw 3rem;
+    border-top: 1px solid rgba(184,146,42,0.15);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+
+  .footer-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: #6a6660;
+    line-height: 1.8;
+  }
+
+  .footer-right {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: #6a6660;
+    line-height: 2;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .intro-grid,
+    .finding-block,
+    .hidden-painting-grid,
+    .conclusions-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .hero-content {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .hero-image-wrap {
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    .palette-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-meta { flex-wrap: wrap; gap: 2rem; }
+
+    section { padding: 12vw 6vw; }
+
+    .hero-content { padding: 12vw 6vw 4vw; }
+  }
+
+  @media (max-width: 500px) {
+    .palette-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="institution-tag">IVCR+i · Generalitat Valenciana · Nº 639/2026</div>
+
+      <h1 class="hero-title">
+        San Juan<br><em>Bautista</em>
+      </h1>
+
+      <p class="hero-subtitle">
+        Estudio científico de la pintura de la Iglesia Parroquial de San Jaime y Santa Ana de Benidorm. Un lienzo que guarda dentro de sí otro lienzo.
+      </p>
+
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Naturaleza</span>
+          <span class="hero-meta-value">Pintura de caballete</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Realizado por</span>
+          <span class="hero-meta-value">David Juanes Barber</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Fecha</span>
+          <span class="hero-meta-value">27 febrero 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image-wrap">
+      <div class="painting-frame" style="box-shadow: 0 30px 80px rgba(0,0,0,0.7);">
+        <img src="IMG_2575.JPG" alt="San Juan Bautista — Iglesia Parroquial de San Jaime y Santa Ana de Benidorm">
+      </div>
+      <p class="painting-caption">Iglesia Parroquial de San Jaime y Santa Ana · Benidorm</p>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Descubrir el estudio</span>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ INTRO ══════════ -->
+<section class="intro">
+  <div class="intro-grid">
+    <div class="intro-text reveal">
+      <div class="section-label">Presentación</div>
+      <h2 class="section-title">Una obra con secretos bajo la superficie</h2>
+      <p>
+        La pintura <strong>San Juan Bautista</strong>, conservada en la Iglesia Parroquial de San Jaime y Santa Ana de Benidorm, ha sido sometida a un exhaustivo estudio científico no invasivo por el Departamento Científico del <strong>Institut Valencià de Conservació, Restauració i Investigació (IVCR+i)</strong>.
+      </p>
+      <p>
+        Los análisis combinan técnicas de vanguardia —radiografía digital, reflectografía infrarroja, espectroscopía hiperespectral, fluorescencia de rayos X y espectroscopía Raman— para revelar la composición material de la obra y sus estratos ocultos, sin extraer ninguna micromuestra.
+      </p>
+      <p>
+        El resultado ha sido un hallazgo extraordinario: <strong>debajo del San Juan Bautista existe una pintura anterior</strong>, con una figura humana en posición de oración, rotada 90 grados. El lienzo fue reutilizado.
+      </p>
+    </div>
+
+    <div class="reveal" style="transition-delay:0.2s">
+      <div style="margin-bottom: 2rem;">
+        <div class="painting-frame" style="box-shadow: 0 20px 60px rgba(0,0,0,0.6); max-width: 420px; margin: 0 auto;">
+          <img src="IMG_2575.JPG" alt="San Juan Bautista — estado previo a la restauración" style="max-height: 520px; object-fit: cover; object-position: top;">
+        </div>
+        <p class="painting-caption" style="max-width:420px; margin: 0.8rem auto 0;">Estado de la obra antes de la restauración</p>
+      </div>
+      <div class="ficha-tecnica">
+        <div class="ficha-row">
+          <span class="ficha-key">Nº Registro</span>
+          <span class="ficha-val">639/2026 · PC178</span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-key">Naturaleza</span>
+          <span class="ficha-val">Pintura de caballete</span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-key">Soporte</span>
+          <span class="ficha-val">Lienzo tafetán</span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-key">Bastidor</span>
+          <span class="ficha-val">4 listones + 4 cuñas + travesaño central</span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-key">Solicitado por</span>
+          <span class="ficha-val">Viqui Quiroga Alamá</span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-key">Servicio</span>
+          <span class="ficha-val">Restauración IVCR+i · Genaro Lahuerta</span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-key">Científico</span>
+          <span class="ficha-val">David Juanes Barber</span>
+        </div>
+        <div class="ficha-row">
+          <span class="ficha-key">Fecha entrega</span>
+          <span class="ficha-val">27 de febrero de 2026</span>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="discovery-banner reveal" style="transition-delay:0.3s">
+    <p>
+      «El análisis radiográfico ha revelado la existencia de <strong>una figura humana subyacente</strong>, en posición de oración, rotada 90 grados en sentido antihorario. El lienzo fue reutilizado, y la pintura anterior solo era visible gracias a los rayos X.»
+    </p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ METHODOLOGY ══════════ -->
+<section class="methodology">
+  <div class="section-label reveal">Metodología</div>
+  <h2 class="section-title reveal">Técnicas de análisis no invasivas</h2>
+  <p class="findings-intro reveal">
+    Todos los análisis se realizaron sin extraer muestras del original. Cinco técnicas complementarias ofrecen una visión completa de la obra, desde su soporte hasta cada capa pictórica.
+  </p>
+
+  <div class="tech-grid">
+    <div class="tech-card reveal">
+      <div class="tech-num">01</div>
+      <div class="tech-name">Estudio Radiográfico</div>
+      <div class="tech-desc">Revela la estructura interna del lienzo, el bastidor y cualquier pintura subyacente invisible a simple vista. Permite detectar el uso de pigmentos densos y el estado de conservación del soporte.</div>
+      <div class="tech-equipment">Teledyne Dalsa Rad-icon 2329 · Philips MG 102 L · 100 kV / 15 mA</div>
+    </div>
+
+    <div class="tech-card reveal" style="transition-delay:0.1s">
+      <div class="tech-num">02</div>
+      <div class="tech-name">Reflectografía Infrarroja</div>
+      <div class="tech-desc">Detecta el dibujo preparatorio y cambios de composición bajo la capa de pintura. Los pigmentos negros carbonosos absorben el infrarrojo y aparecen oscuros en la imagen resultante.</div>
+      <div class="tech-equipment">Raptor InGaAs OWL 1280 · 400–1700 nm</div>
+    </div>
+
+    <div class="tech-card reveal" style="transition-delay:0.15s">
+      <div class="tech-num">03</div>
+      <div class="tech-name">Espectroscopía Hiperespectral</div>
+      <div class="tech-desc">Obtiene mapas de distribución de pigmentos en toda la superficie. Cada píxel contiene un espectro de reflectancia que permite identificar materiales por su firma espectral característica.</div>
+      <div class="tech-equipment">Specim FX17 · 900–1700 nm · Falso color</div>
+    </div>
+
+    <div class="tech-card reveal" style="transition-delay:0.2s">
+      <div class="tech-num">04</div>
+      <div class="tech-name">Fluorescencia de Rayos X (EDXRF)</div>
+      <div class="tech-desc">Análisis elemental puntual y en modo barrido (mapping). Determina qué metales están presentes en cada zona, identificando indirectamente los pigmentos empleados, incluso en capas profundas.</div>
+      <div class="tech-equipment">Elio Bruker · 40 kV · 20 µA · Ø 1 mm</div>
+    </div>
+
+    <div class="tech-card reveal" style="transition-delay:0.25s">
+      <div class="tech-num">05</div>
+      <div class="tech-name">Espectroscopía Raman</div>
+      <div class="tech-desc">Identifica compuestos moleculares en superficie. Complementa la EDXRF resolviendo ambigüedades en la caracterización de pigmentos orgánicos e inorgánicos con bandas espectrales características.</div>
+      <div class="tech-equipment">Bravo Bruker · Portátil · Condiciones prefijadas</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ FINDINGS ══════════ -->
+<section class="findings">
+  <div class="section-label reveal">Resultados</div>
+  <h2 class="section-title reveal">Hallazgos principales</h2>
+  <p class="findings-intro reveal">
+    El cruce de técnicas ha permitido caracterizar el soporte, la paleta, la técnica de ejecución y —sobre todo— la presencia de una composición anterior completamente desconocida.
+  </p>
+
+  <div class="finding-block reveal">
+    <div>
+      <div class="finding-num">01</div>
+    </div>
+    <div>
+      <div class="finding-label">Soporte</div>
+      <h3 class="finding-title">Lienzo tafetán en buen estado de conservación</h3>
+      <p class="finding-text">
+        La obra está compuesta por un <strong>lienzo tafetán</strong> con textura reticular regular y bien definida. El estudio radiográfico muestra los hilos de trama y urdimbre con claridad, detectando incluso una zona de intervención a la derecha. El bastidor presenta <strong>cuatro listones perimetrales tensados con cuatro cuñas</strong> en las esquinas y un travesaño central. No se detectan alteraciones estructurales que comprometan su integridad.
+      </p>
+      <p class="finding-text" style="margin-top:0.8rem">
+        La capa pictórica muestra un <strong>patrón de craqueladuras</strong> en algunas zonas. La radiografía evidencia acumulaciones de pintura en estas grietas, lo que sugiere que el artista pudo utilizar un lienzo que ya presentaba deterioro previo.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding-block reveal">
+    <div>
+      <div class="finding-num">02</div>
+    </div>
+    <div>
+      <div class="finding-label">Dibujo preparatorio</div>
+      <h3 class="finding-title">Ejecución directa sin boceto previo</h3>
+      <p class="finding-text">
+        La imagen de reflectografía infrarroja <strong>no ha revelado un dibujo preparatorio extenso</strong> del San Juan Bautista, lo que indica una ejecución bastante directa sobre el lienzo. Solo se identificaron dos trazos oscuros asociados a un dibujo a pincel en la vegetación lateral de la composición.
+      </p>
+      <p class="finding-text" style="margin-top:0.8rem">
+        El manto rojo oscuro en la zona del pie izquierdo de San Juan se pintó <strong>encima de la pintura de la roca</strong>, evidenciando el orden de ejecución de los distintos elementos compositivos.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding-block reveal">
+    <div>
+      <div class="finding-num">03</div>
+    </div>
+    <div>
+      <div class="finding-label">Hallazgo excepcional</div>
+      <h3 class="finding-title">Pintura subyacente: una figura en oración</h3>
+      <p class="finding-text">
+        El descubrimiento más significativo es la confirmación de que el lienzo fue reutilizado. En la zona superior izquierda, la radiografía revela con claridad <strong>un rostro y unas manos en posición de orar</strong> pertenecientes a una figura que no aparece en la imagen visible, coincidiendo con la zona del codo y antebrazo derecho del San Juan.
+      </p>
+      <p class="finding-text" style="margin-top:0.8rem">
+        El personaje oculto está <strong>rotado 90 grados en sentido antihorario</strong> respecto a la composición visible. Los mapas elementales EDXRF identifican en esta figura azurita (vestimenta azul), albayalde para las carnaciones, bermellón localizado en los labios y tierras de hierro y manganeso para el modelado facial.
+      </p>
+      <p class="finding-text" style="margin-top:0.8rem">
+        La mayor radiopacidad en la mitad superior del lienzo, donde se localiza la pintura oculta, sugiere que el pintor empleó un <strong>lienzo con cierto deterioro previo</strong>, y la nueva pintura se acumuló en las craqueladuras preexistentes. En la parte inferior, el efecto es menor, indicando que el lienzo reutilizado posiblemente no estaba terminado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ PALETA ══════════ -->
+<section class="palette-section">
+  <div class="section-label reveal">Análisis de pigmentos</div>
+  <h2 class="section-title reveal">Paleta pictórica de la obra visible</h2>
+  <p class="findings-intro reveal">
+    La integración de EDXRF y Raman permite caracterizar con precisión los materiales empleados. El albayalde actúa como pigmento estructural omnipresente, base de la construcción volumétrica.
+  </p>
+
+  <div class="palette-grid reveal">
+    <div class="palette-item">
+      <div class="palette-swatch" style="background: linear-gradient(135deg, #f0ebe0, #d8d0c0);"></div>
+      <div class="palette-color-name">Blancos</div>
+      <div class="palette-pigments">Albayalde (carbonato básico de plomo). Omnipresente en luces, carnaciones y preparación de colores.</div>
+      <div class="palette-border" style="background: linear-gradient(to right, #d8d0c0, transparent);"></div>
+    </div>
+
+    <div class="palette-item">
+      <div class="palette-swatch" style="background: linear-gradient(135deg, #2d4a8b, #4a7ac0);"></div>
+      <div class="palette-color-name">Azules</div>
+      <div class="palette-pigments">Índigo en superficie; azul esmalte (silicato de potasio y cobalto) en capas internas; azurita en la figura subyacente.</div>
+      <div class="palette-border" style="background: linear-gradient(to right, #3a5faa, transparent);"></div>
+    </div>
+
+    <div class="palette-item">
+      <div class="palette-swatch" style="background: linear-gradient(135deg, #8b2020, #c04030);"></div>
+      <div class="palette-color-name">Rojos</div>
+      <div class="palette-pigments">Bermellón (sulfuro de mercurio) para los rojos luminosos del manto. Tierras rojas (óxido de hierro) para los rojos más mate.</div>
+      <div class="palette-border" style="background: linear-gradient(to right, #aa3020, transparent);"></div>
+    </div>
+
+    <div class="palette-item">
+      <div class="palette-swatch" style="background: linear-gradient(135deg, #5a4030, #7a6050);"></div>
+      <div class="palette-color-name">Pardos</div>
+      <div class="palette-pigments">Tierras de sombra (óxidos de hierro y manganeso). Base de los tonos pardos con modulación variable de albayalde.</div>
+      <div class="palette-border" style="background: linear-gradient(to right, #6a5040, transparent);"></div>
+    </div>
+
+    <div class="palette-item">
+      <div class="palette-swatch" style="background: linear-gradient(135deg, #2a5030, #3a7040);"></div>
+      <div class="palette-color-name">Verdes</div>
+      <div class="palette-pigments">Pigmento de cobre, probablemente verdigrís (acetato de cobre). Cubierto por veladuras de albayalde en las zonas de vegetación.</div>
+      <div class="palette-border" style="background: linear-gradient(to right, #305a38, transparent);"></div>
+    </div>
+  </div>
+
+  <div style="margin-top: 3rem; padding: 2rem 2.5rem; border: 1px solid rgba(45,74,107,0.3); background: rgba(45,74,107,0.05);" class="reveal">
+    <div class="section-label" style="margin-bottom:1rem">Técnica de ejecución · Los azules del cielo</div>
+    <p style="color:#b0aba2; font-size:0.95rem; line-height:1.75; max-width:80ch">
+      El análisis de los azules del cielo revela una técnica sofisticada en capas: el artista empleó probablemente <strong style="color:var(--azure-light)">azul esmalte en capas internas</strong> para establecer el tono general, completando con <strong style="color:var(--azure-light)">veladuras de índigo en superficie</strong> para conseguir la transparencia y saturación característica del azul celeste. En las zonas 2 y 4 también se detectó mercurio, indicando la presencia de bermellón bajo la capa azul.
+    </p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ HIDDEN PAINTING ══════════ -->
+<section class="hidden-painting">
+  <div class="section-label reveal">Pintura subyacente</div>
+  <h2 class="section-title reveal">La figura oculta: reconstrucción</h2>
+
+  <div class="hidden-painting-grid">
+    <div class="hidden-painting-visual reveal">
+      <div style="margin-bottom: 1rem; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase;">Esquema estratigráfico</div>
+      <div class="layer-diagram">
+        <div class="layer layer-top">
+          <span class="layer-label">▲ CAPA VISIBLE · San Juan Bautista · Óleo sobre lienzo</span>
+        </div>
+        <div class="layer layer-mid">
+          <span class="layer-label">— PREPARACIÓN / IMPRIMACIÓN —</span>
+        </div>
+        <div class="layer layer-hidden">
+          <span class="layer-label">▼ PINTURA SUBYACENTE · Figura en oración · Girada 90°</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <span class="data-pill">Rostro identificado por Pb (albayalde)</span>
+        <span class="data-pill">Labios por Hg (bermellón)</span>
+        <span class="data-pill">Sombras por Fe/Mn (tierras)</span>
+        <span class="data-pill">Vestimenta por Cu (azurita)</span>
+        <span class="data-pill">Rotación: 90° antihorario</span>
+        <span class="data-pill">Zona: tercio superior del lienzo</span>
+      </div>
+    </div>
+
+    <div class="hidden-text-side reveal" style="transition-delay:0.2s">
+      <p>
+        El mapa elemental de la zona del <strong>«rostro oculto»</strong> (86 × 77 mm escaneados a 1 mm/píxel) muestra cómo el volumen facial fue construido mediante la oposición clásica entre luz y sombra:
+      </p>
+      <p>
+        El <strong>plomo (albayalde)</strong> se concentra en la zona central del rostro —luces y máxima iluminación—, diluyéndose hacia los bordes. El <strong>hierro y manganeso (tierras)</strong> se acumulan en los contornos laterales y la zona de los ojos, modelando las sombras. El <strong>mercurio (bermellón)</strong> aparece puntualmente en la zona de los labios.
+      </p>
+      <p>
+        En el <strong>«mapa brazo»</strong> (zona de la axila derecha de San Juan), se detecta una distribución difusa de <strong>cobre (azurita)</strong> que se interpreta como el resto de una vestimenta del personaje subyacente, que posiblemente vestía un manto o túnica azul.
+      </p>
+      <p>
+        La correlación de toda la información —radiografía, reflectografía infrarroja y mapas elementales— permite reconstruir una figura orante, vestida de azul, con técnica similar a la de la obra visible: albayalde en las luces, tierras en las sombras, bermellón en los acentos cálidos.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ GALLERY ══════════ -->
+<section class="gallery-section">
+  <div class="section-label reveal">Imágenes científicas</div>
+  <h2 class="section-title reveal">Tres miradas sobre la misma obra</h2>
+  <p class="findings-intro reveal" style="margin-bottom:0">
+    La luz visible, los rayos X y el infrarrojo revelan realidades superpuestas. Haz clic en cada imagen para ampliarla.
+  </p>
+
+  <!-- Strip selector -->
+  <div class="img-strip reveal" id="imgStrip">
+    <div class="img-strip-item active-strip" data-img="IMG_2575.JPG" data-label="Luz visible · Estado antes de la restauración" onclick="selectImage(this)">
+      <img src="IMG_2575.JPG" alt="Luz visible">
+      <div class="img-strip-label">Luz visible</div>
+    </div>
+    <div class="img-strip-item" data-img="RX_San_Juan.jpg" data-label="Radiografía X · Pintura subyacente y estructura interna" onclick="selectImage(this)">
+      <img src="RX_San_Juan.jpg" alt="Radiografía">
+      <div class="img-strip-label">Radiografía X</div>
+    </div>
+    <div class="img-strip-item" data-img="IRR_San_Juan.jpg" data-label="Reflectografía infrarroja · Capas bajo la pintura" onclick="selectImage(this)">
+      <img src="IRR_San_Juan.jpg" alt="Infrarrojo IRR">
+      <div class="img-strip-label">Reflectografía IR</div>
+    </div>
+  </div>
+
+  <!-- Main viewer -->
+  <div style="margin-top: 2px; position: relative;">
+    <img id="mainGalleryImg" src="IMG_2575.JPG" class="gallery-main-img" alt="Imagen seleccionada" onclick="openLightbox(this.src, this.alt)">
+    <div id="zoomHint" style="position:absolute; bottom:1rem; right:1rem; font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.15em; color:rgba(184,146,42,0.5); pointer-events:none;">
+      CLIC · AMPLIAR
+    </div>
+  </div>
+
+  <div class="gallery-info reveal">
+    <div class="gallery-info-block" id="galleryInfoLeft">
+      <div class="gallery-info-label">Imagen actual</div>
+      <div class="gallery-info-text" id="galleryInfoTitle"><strong>Luz visible</strong> — Estado antes de la restauración</div>
+    </div>
+    <div class="gallery-info-block" id="galleryInfoRight">
+      <div class="gallery-info-label">Qué revela</div>
+      <div class="gallery-info-text" id="galleryInfoDesc">
+        La imagen en luz visible muestra el estado de la obra antes de la intervención de restauración. Se aprecian las importantes pérdidas de capa pictórica, la suciedad superficial acumulada y el craquelado generalizado que evidencian el deterioro de la pintura.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LIGHTBOX ══════════ -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">ESC · CERRAR</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ CONCLUSIONS ══════════ -->
+<section class="conclusions">
+  <div class="section-label reveal">Conclusiones</div>
+  <h2 class="section-title reveal">Síntesis del estudio</h2>
+
+  <div class="conclusions-grid reveal">
+    <div class="conclusion-card">
+      <span class="conclusion-icon">⬛</span>
+      <div class="conclusion-title">Estado de conservación</div>
+      <p class="conclusion-text">El soporte y el bastidor se encuentran en buen estado. La capa pictórica presenta craqueladuras en algunas zonas, relacionadas posiblemente con el deterioro previo del lienzo reutilizado.</p>
+    </div>
+
+    <div class="conclusion-card">
+      <span class="conclusion-icon">◉</span>
+      <div class="conclusion-title">Lienzo reutilizado</div>
+      <p class="conclusion-text">El hallazgo más significativo: el lienzo fue reutilizado con una figura anterior en posición de oración, rotada 90° en sentido antihorario. Solo visible mediante técnicas científicas.</p>
+    </div>
+
+    <div class="conclusion-card">
+      <span class="conclusion-icon">◈</span>
+      <div class="conclusion-title">Paleta histórica coherente</div>
+      <p class="conclusion-text">La paleta —albayalde, bermellón, índigo, azul esmalte, tierras y verdigrís— es plenamente consistente con la práctica pictórica de los siglos XVI–XVII, sin pigmentos anacrónicos.</p>
+    </div>
+
+    <div class="conclusion-card">
+      <span class="conclusion-icon">◬</span>
+      <div class="conclusion-title">Técnica directa y volumétrica</div>
+      <p class="conclusion-text">La ausencia de dibujo preparatorio extenso sugiere una ejecución directa. El albayalde construye el volumen en las luces y las tierras modelan las sombras, técnica típicamente manierista.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">IVCR+i</div>
+      <div class="footer-sub">
+        Institut Valencià de Conservació,<br>
+        Restauració i Investigació<br>
+        Generalitat Valenciana
+      </div>
+    </div>
+    <div class="footer-right">
+      Informe Nº 639/2026 · Clave PC178<br>
+      Departamento Científico<br>
+      David Juanes Barber<br>
+      27 de febrero de 2026
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for scroll reveals
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Gallery viewer
+  const galleryData = {
+    'IMG_2575.JPG': {
+      title: '<strong>Luz visible</strong> — Estado antes de la restauración',
+      desc: 'La imagen en luz visible muestra el estado de la obra antes de la intervención de restauración. Se aprecian las importantes pérdidas de capa pictórica, la suciedad superficial acumulada y el craquelado generalizado que evidencian el deterioro de la pintura.'
+    },
+    'RX_San_Juan.jpg': {
+      title: '<strong>Radiografía X</strong> — Pintura subyacente y estructura interna',
+      desc: 'La imagen radiográfica es el hallazgo más extraordinario: revela con claridad una <strong>figura humana anterior</strong>, girada 90° en sentido antihorario, con un rostro y manos en posición de orar. El lienzo fue reutilizado. Las zonas blancas corresponden a pigmentos densos como el albayalde; las zonas oscuras, a colores con pocos metales pesados.'
+    },
+    'IRR_San_Juan.jpg': {
+      title: '<strong>Reflectografía infrarroja (IRR)</strong> — Capas bajo la pintura',
+      desc: 'La imagen IRR no revela un dibujo preparatorio extenso del San Juan Bautista, indicando una ejecución directa sobre el lienzo. Se observa un cambio horizontal en la respuesta infrarroja coincidiendo con el travesaño del bastidor. El manto rojo oscuro del pie izquierdo se pintó encima de la roca, y la imagen muestra el rostro de la figura subyacente.'
+    }
+  };
+
+  function selectImage(el) {
+    document.querySelectorAll('.img-strip-item').forEach(i => i.classList.remove('active-strip'));
+    el.classList.add('active-strip');
+    const src = el.dataset.img;
+    const mainImg = document.getElementById('mainGalleryImg');
+    mainImg.style.opacity = '0';
+    mainImg.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => {
+      mainImg.src = src;
+      mainImg.alt = el.dataset.label;
+      mainImg.style.opacity = '1';
+    }, 250);
+    const data = galleryData[src];
+    if (data) {
+      document.getElementById('galleryInfoTitle').innerHTML = data.title;
+      document.getElementById('galleryInfoDesc').innerHTML = data.desc;
+    }
+  }
+
+  function openLightbox(src, alt) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxCaption').textContent = alt;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(e) {
+    if (e.target === document.getElementById('lightbox') || e.target === document.getElementById('lightboxImg')) {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // ESC key to close lightbox
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+</script>
+</body>
+</html>
